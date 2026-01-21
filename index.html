@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" type="image/png" />
+<title>System.Care.Sync</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="stylesheet" href="Aset/css/style.css">
+
+</head>
+<body class="bg-white text-black pb-20 font-sans">
+
+<!-- SPLASH LOADING -->
+<div id="splash" class="fixed inset-0 z-[9999] bg-white flex items-center justify-center">
+<div class="flex flex-col items-center gap-4">
+
+<!-- Logo -->
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg" alt="Instagram" class="w-20 h-20 mx-auto mb-2">
+
+<!-- Spinner -->
+<div class="win-spinner"></div>
+
+<!-- Tulisan -->
+<div class="text-xs text-gray-500">Memuat…</div>
+
+<!-- From Meta -->
+<div class="flex flex-col items-center gap-1">
+<div class="text-xs text-gray-500">from</div>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Meta_Platforms_Inc._logo.svg/960px-Meta_Platforms_Inc._logo.svg.png" alt="Meta" class="h-6 w-auto">
+</div>
+
+</div>
+</div>
+
+
+<!-- Navbar -->
+<nav class="fixed top-0 w-full bg-white border-b z-40 px-4 h-16 flex items-center justify-between max-w-60xl mx-auto left-0 right-0">
+<div class="flex-shrink-0">
+<img src="Aset/gambar/iglogo.png" alt="Instagram" class="h-50 w-50 mx-auto mb-2">
+</div>
+<div class="hidden md:block relative w-64">
+<input type="text" placeholder="Cari" class="w-full pl-4 pr-4 py-1.5 bg-gray-100 rounded-lg focus:outline-none text-sm">
+</div>
+<div class="flex items-center gap-4">
+<button onclick="checkProtectedAction()" class="hover:scale-110 transition-transform"><i data-lucide="home"></i></button>
+<button onclick="checkProtectedAction()" class="hover:scale-110 transition-transform relative">
+<i data-lucide="message-circle"></i>
+<span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1 rounded-full">3</span>
+</button>
+<button onclick="checkProtectedAction()" class="hover:scale-110 transition-transform"><i data-lucide="compass"></i></button>
+<button onclick="checkProtectedAction()" class="hover:scale-110 transition-transform"><i data-lucide="heart"></i></button>
+
+<!-- AREA LOGIN -->
+<div id="auth-buttons" class="flex gap-2 ml-2">
+<button onclick="openModal('login')" class="bg-[#0095f6] text-white px-4 py-1.5 rounded text-sm font-semibold hover:bg-[#1877f2]">Masuk</button>
+<button onclick="openModal('signup')" class="text-[#0095f6] font-semibold text-sm hover:text-[#00376b]">Daftar</button>
+</div>
+
+<div id="user-profile" class="hidden relative">
+<!-- Ikon Profil User-->
+<div onclick="toggleMenu()" class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-purple-600 p-[2px] cursor-pointer hover:scale-105 transition-transform">
+<div id="user-avatar-letter" class="w-full h-full rounded-full bg-white flex items-center justify-center text-sm font-bold text-gray-700 uppercase select-none">
+U
+</div>
+</div>
+                
+<!-- Menu Dropdown (Keluar / Hapus Data) -->
+<div id="profile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-1 origin-top-right z-50">
+<div class="px-4 py-2 border-b bg-gray-50">
+<p class="text-xs text-gray-500">Login sebagai</p>
+<p id="menu-username" class="font-bold truncate">User</p>
+</div>
+<button onclick="logout()" class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2">
+<i data-lucide="log-out" size="16"></i> Keluar
+</button>
+<button onclick="confirmDelete()" class="w-full text-left px-4 py-2 text-sm hover:bg-red-50 text-red-600 flex items-center gap-2">
+<i data-lucide="trash-2" size="16"></i> Hapus Data
+</button>
+</div>
+</div>
+</div>
+</nav>
+
+
+<!-- KONTEN UTAMA -->
+<main class="pt-20 max-w-4xl mx-auto">
+<!-- HEADER PROFIL -->
+<div class="flex flex-col md:flex-row items-center md:items-start gap-8 px-4 md:px-12 mb-8">
+<!-- FOTO PROFIL UTAMA -->
+<div class="flex-shrink-0">
+<div class="w-24 h-24 md:w-36 md:h-36 rounded-full p-[2px] bg-gradient-to-tr from-yellow-400 to-purple-600">
+<img src="aset/gambar/pp-default.png" alt="Profile" class="w-full h-full rounded-full border-2 border-white bg-gray-100 object-cover">
+</div>
+</div>
+<!-- INFO PROFIL -->
+<div class="flex-1 text-center md:text-left">
+<!-- Username + Tombol -->
+<div class="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+<h2 class="text-2xl font-bold">System.Care.Sync</h2>
+<div class="flex gap-2 justify-center md:justify-start">
+<button id="followBtn" onclick="handleFollowClick()" class="bg-[#0095f6] hover:bg-[#1877f2] text-white px-4 py-1.5 rounded-lg text-sm font-semibold transition">
+Ikuti
+</button>
+<button class="bg-gray-100 hover:bg-gray-200 px-4 py-1.5 rounded-lg text-sm font-semibold">
+Edit Profil
+</button>
+<button class="bg-gray-100 hover:bg-gray-200 px-4 py-1.5 rounded-lg text-sm font-semibold">
+Lihat Arsip
+</button>
+</div>
+</div>
+
+<!-- Statistik -->
+<div class="flex justify-center md:justify-start gap-8 mb-4 text-sm">
+<span><strong>4</strong> kiriman</span>
+<span><strong id="followerCount">799</strong> pengikut</span>
+<span><strong>4.2K</strong> diikuti</span>
+</div>
+<!-- BIO -->
+<div class="flex flex-col items-start gap-1 ml-4 md:ml-0">
+<!-- Link dengan logo -->
+<a href="https://systemcaresync.netlify.app/" class="text-[#00376b] font-semibold flex items-center gap-2 mb-2">
+<img src="https://cdn-icons-png.flaticon.com/128/6631/6631544.png" alt="Logo" class="w-4 h-4">
+systemcaresync
+</a>
+
+<!-- Judul & Keterangan Bio -->
+<h1 class="font-bold text-left">System Care Sync</h1>
+<p class="text-gray-600 text-left">Teknisi Komputer dan Laptop</p>
+<p class="text-left">Servis, perbaikan, dan upgrade perangkat komputer & laptop profesional.</p>
+</div>
+
+
+</div>
+</div>
+</div>
+<!-- MODAL BATAL FOLLOW -->
+<div id="unfollow-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-xl p-6 max-w-xs w-full text-center modal-animate">
+<h3 class="font-bold text-lg mb-2">Berhenti Mengikuti?</h3>
+<p class="text-gray-500 text-sm mb-6">
+Anda akan berhenti mengikuti akun ini.
+</p>
+<div class="flex gap-3">
+<button onclick="closeUnfollowModal()" class="flex-1 px-4 py-2 border rounded-lg text-sm font-semibold hover:bg-gray-50">
+Batal
+</button>
+<button onclick="confirmUnfollow()" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700">
+Berhenti
+</button>
+</div>
+</div>
+</div>
+
+<!-- Highlight Story -->
+<div class="border-t border-gray-200 pt-4">
+
+ <!-- STORY -->
+<div class="flex gap-4 overflow-x-auto pb-4 mb-8 px-4 scrollbar-hide">
+<!-- STORY ITEM 1 -->
+<div class="flex flex-col items-center gap-1 cursor-pointer flex-shrink-0" onclick="handlePrivateStoryClick()">
+<div class="w-16 h-16 rounded-full p-[2px] border border-gray-200">
+<div class="w-full h-full rounded-full overflow-hidden relative bg-gray-100">
+<!-- GAMBAR STORY 1 -->
+<img src="aset/gambar/story1.png" class="w-full h-full object-cover blur-effect">
+<div class="absolute inset-0 flex items-center justify-center bg-black/10 pointer-events-none">
+<i data-lucide="lock" class="text-white w-3 h-3"></i>
+</div>
+</div>
+</div>
+<span class="text-xs text-gray-700 truncate w-16 text-center">Matot Done</span>
+</div>
+
+<!-- STORY ITEM 2 -->
+<div class="flex flex-col items-center gap-1 cursor-pointer flex-shrink-0" onclick="handlePublicStoryClick(2)">
+<div class="w-16 h-16 rounded-full p-[2px] border border-gray-200">
+<div class="w-full h-full rounded-full overflow-hidden relative bg-gray-100">
+<!-- Gambar Story 2 -->
+<img src="aset/gambar/story2.png" class="w-full h-full object-cover blur-effect">
+</div>
+</div>
+<span class="text-xs text-gray-700 truncate w-16 text-center">Laptop Gami....</span>
+</div>
+
+<!-- STORY ITEM 3 -->
+<div class="flex flex-col items-center gap-1 cursor-pointer flex-shrink-0" onclick="handlePublicStoryClick(3)">
+<div class="w-16 h-16 rounded-full p-[2px] border border-gray-200">
+<div class="w-full h-full rounded-full overflow-hidden relative bg-gray-100">
+<!-- Gambar Story 3 -->
+<img src="aset/gambar/story3.png" class="w-full h-full object-cover blur-effect">
+</div>
+</div>
+<span class="text-xs text-gray-700 truncate w-16 text-center">Rakitan Off....</span>
+</div>
+</div>
+
+<!-- STORY VIEWER -->
+<div id="story-viewer" class="hidden fixed inset-0 bg-black z-[9999] flex items-center justify-center">
+<button onclick="closeStoryViewer()" class="absolute top-4 right-4 text-white text-2xl font-bold z-[10000]">✕</button>
+<img id="storyImage" src="" class="max-w-full max-h-full rounded-lg">
+</div>
+
+<!-- STORY PRIVATE MODAL -->
+<div id="story-private-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-xl p-6 max-w-xs w-full text-center modal-animate">
+<h3 class="font-bold text-lg mb-2">Story Privat</h3>
+<p class="text-gray-500 text-sm mb-4">Story ini hanya dapat dilihat oleh pengguna tertentu.</p>
+<button onclick="closeStoryPrivate()" class="w-full border py-2 rounded-lg text-sm font-semibold">Tutup</button>
+</div>
+</div>
+
+<!-- MODAL STORY TERKUNCI (IKUTI) -->
+<div id="story-lock-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-xl p-6 max-w-xs w-full text-center modal-animate">
+<h3 class="font-bold text-lg mb-2">Akun Privat</h3>
+<p class="text-gray-500 text-sm mb-4">Ikuti akun ini untuk melihat story.</p>
+<button onclick="closeStoryLock()" class="w-full bg-gray-200 hover:bg-gray-300 text-black py-2 rounded-lg font-semibold text-sm">Oke</button>
+</div>
+</div>
+
+<!-- POPUP NOTIFIKASI LOGIN -->
+<div id="login-notif" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-xl p-6 max-w-sm sm:max-w-md w-full text-center modal-animate">
+<img src="Aset/gambar/ig.png" alt="Instagram" class="h-50 w-50 mx-auto mb-2">
+<h3 class="text-2xl font-bold mb-1">Lihat postingan lainnya</h3>
+<p class="text-lg font-semibold mb-1">Anda harus login terlebih dahulu</p>
+<p class="text-black text-sm mb-2">Lihat konten profil System.Care.Sync</p>
+<p class="text-gray-400 text-xs mb-3">Dengan melanjutkan, Anda menyetujui Ketentuan Penggunaan dan Kebijakan Privasi Instagram.</p>
+<button onclick="closeLoginNotif()" class="w-full bg-[#0095f6] hover:bg-[#1877f2] text-white py-2 rounded-lg font-semibold text-sm">Oke</button>
+</div>
+</div>
+
+<!-- Tombol Navigasi IG -->
+<div class="flex justify-around border-t pt-2 text-gray-500 text-sm font-semibold">
+<!-- Tombol Foto -->
+<button onclick="activateTab('photo')" id="tab-photo" class="flex flex-col items-center gap-1 border-b-2 border-transparent pb-1 transition-all duration-200">
+<img src="https://media.istockphoto.com/id/1448778725/id/vektor/ikon-kisi-ikon-media-sosial.jpg?s=612x612&w=0&k=20&c=uZAkLoGOnn-7CxqBMvBsX4I1NU_wn1BdPfZWQnfu104=" class="h-5 w-5"><span>Foto</span>
+</button>
+<!-- Tombol Reels -->
+<button onclick="activateTab('reels')" id="tab-reels" class="flex flex-col items-center gap-1 border-b-2 border-transparent pb-1 transition-all duration-200">
+<img src="https://img.icons8.com/?size=256&id=eAMGjpJ4skFB&format=png" class="h-5 w-5"><span>Reels</span>
+</button>
+<!-- Tombol Tagged -->
+<button onclick="activateTab('tag')" id="tab-tag" class="flex flex-col items-center gap-1 border-b-2 border-transparent pb-1 transition-all duration-200">
+<img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/instagram-tag-icon.png" class="h-5 w-5"><span>Tagged</span></button>
+</div>
+
+<!-- Grid Reels -->
+<div id="reels-grid" class="hidden flex flex-col items-center justify-center py-8 text-center">
+<img src="Aset/gambar/reelskosong.png" alt="Belum ada Reels" class="w-24 h-24 mb-4 opacity-80">
+<h3 class="text-lg font-bold text-gray-600 mb-1">Belum ada Reels yang diposting</h3>
+<p class="text-sm text-gray-400">Konten Reels akan tampil setelah diposting.</p>
+</div>
+
+<!-- Grid Tagged -->
+<div id="tag-grid" class="hidden flex flex-col items-center justify-center py-8 text-center">
+<img src="Aset/gambar/taggedkosong.png" alt="Belum ada Tagged" class="w-26 h-24 mb-4 opacity-80">
+<h3 class="text-lg font-bold text-gray-600 mb-1">Belum ada postingan yang ditandai</h3>
+<p class="text-sm text-gray-400">Konten Tagged akan tampil setelah diposting.</p>
+</div>
+
+<!-- Grid Foto -->
+<div id="photo-grid" class="grid grid-cols-4 gap-1 md:gap-4">
+
+
+<div class="aspect-square relative cursor-pointer overflow-hidden bg-gray-100 group"
+onclick="handlePostClick(1)">
+<!-- Foto 1 -->
+<img
+src="Aset/gambar/laptop.jpg"
+class="w-full h-full object-cover
+transition-transform duration-300
+group-hover:scale-105">
+<!-- Overlay -->
+<div
+class="absolute inset-0 flex items-center justify-center
+bg-black/40 text-white text-xl font-bold
+!opacity-0 group-hover:!opacity-100
+transition-opacity duration-300
+pointer-events-none">
+❤️ 434 &nbsp;&nbsp; 💬 5
+</div>
+</div>
+
+<!-- Foto 2 -->
+<div
+class="aspect-square relative cursor-pointer overflow-hidden bg-gray-100 group"
+onclick="handlePostClick(2)">
+<img src="Aset/gambar/remot.png"
+class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+<div
+class="absolute inset-0 flex items-center justify-center
+bg-black/40 text-white text-xl font-bold
+opacity-0 group-hover:!opacity-100 transition-opacity duration-300 pointer-events-none">
+❤️ 229 &nbsp;&nbsp; 💬 1
+</div>
+</div>
+
+<!-- Foto 3 -->
+<div
+class="aspect-square relative cursor-pointer overflow-hidden bg-gray-100 group"
+onclick="handlePostClick(3)">
+<img src="Aset/gambar/jam.png"
+class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+<div
+class="absolute inset-0 flex items-center justify-center
+bg-black/40 text-white text-xl font-bold
+opacity-0 group-hover:!opacity-100 transition-opacity duration-300 pointer-events-none">
+❤️ 25 &nbsp;&nbsp; 💬 0
+</div>
+</div>
+
+<!-- Foto 4 -->
+<div
+class="aspect-square relative cursor-pointer overflow-hidden bg-gray-100 group"
+onclick="handlePostClick(4)">
+<img src="Aset/gambar/pc.png"
+class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+<div
+class="absolute inset-0 flex items-center justify-center
+bg-black/40 text-white text-xl font-bold
+opacity-0 group-hover:!opacity-100 transition-opacity duration-300 pointer-events-none">
+❤️ 650 &nbsp;&nbsp; 💬 8
+</div>
+</div>
+
+<!---- POPUP Foto ------->
+<!-- post1  -->
+
+<div id="post1"
+class="hidden fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center">
+<button
+onclick="closePostPopup()"
+class="absolute top-4 right-4 z-[60]
+text-white text-3xl font-bold hover:opacity-70">
+✕
+</button>
+
+<div class="bg-white w-[90%] max-w-5xl h-[90vh] flex"
+onclick="event.stopPropagation()">
+<!-- WRAPPER UTAMA -->
+<div class="bg-white w-[90%] max-w-5xl h-[90vh] flex" onclick="event.stopPropagation()">
+
+<!-- FOTO -->
+<div class="w-1/2 bg-black flex items-center justify-center">
+<img src="Aset/gambar/laptop.jpg" class="max-w-full max-h-full object-contain">
+</div>
+
+<!-- INFO dan KOMENTAR -->
+<div class="w-1/2 flex flex-col text-sm">
+
+<!-- HEADER AKUN -->
+<div class="flex items-center gap-3 px-4 py-3 border-b">
+<img src="Aset/gambar/pp-default.png" class="w-9 h-9 rounded-full">
+<span class="font-semibold">System.Care.Sync</span>
+</div>
+
+<!-- CAPTION -->
+<div class="flex gap-3 px-4 py-3 border-b">
+<img src="Aset/gambar/pp-default.png" class="w-8 h-8 rounded-full">
+<div>
+<span class="font-semibold">System.Care.Sync</span>
+<div class="text-gray-700 space-y-1">
+<p>🔥 😍😍 Laptop siap jual!</p>
+<p>Spesifikasi:</p>
+<ul class="list-disc list-inside">
+<li>Ryzen 5 5600H</li>
+<li>RAM 16GB DDR4 👌</li>
+<li>SSD 512GB NVMe</li>
+<li>GPU NVIDIA GTX 1650 4GB</li>
+<li>Layar 15,6″ FHD 144Hz IPS 👌</li>
+<li>Kondisi mulus, sudah upgrade thermal baterai awet</li>
+</ul>
+<p>Cocok buat kerja, gaming, desain grafis, dan editing video pro.</p>
+<p>Harga: Rp 9.250.000</p>
+<p>📍 COD Semarang, Siap antar dalam kota</p>
+<p>DM kalau minat, cepat sebelum kehabisan</p>
+</div>
+</div>
+</div> <!-- END CAPTION -->
+
+<!-- LIST KOMENTAR -->
+<div class="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+<div class="flex gap-3">
+<img src="https://image.shutterstock.com/image-vector/vector-flat-illustration-grayscale-avatar-250nw-2281862025.jpg" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">user213</span> Nego gas bang,COD 🔥</p>
+</div>
+<div class="flex gap-3">
+<img src="Aset/gambar/pp-default.png" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">System.Care.Sync</span> Inbok langsung aja mas.</p>
+</div>
+<div class="flex gap-3">
+<img src="https://img.freepik.com/premium-vector/user-icon-icon_1076610-59410.jpg" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">tech.lover</span> ready stock unit bang?</p>
+</div>
+<div class="flex gap-3">
+<img src="Aset/gambar/pp-default.png" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">System.Care.Synce</span> Sold Out, sorry kak.</p>
+</div>
+<div class="flex gap-3">
+<img src="https://cdn-icons-png.freepik.com/512/219/219989.png" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">anak_kampus605</span> cocok banget buat kuliah + editing ringan.</p>
+</div>
+</div> <!-- END KOMENTAR -->
+
+<!-- ICON ACTION -->
+<div class="px-4 py-2 border-t flex gap-4 text-xl">
+<span>❤️</span>
+<span>💬</span>
+<img src="https://www.oppl.org/wp-content/uploads/2023/07/Share-icon-Upward-arrow.png"class="w-7 h-7 rounded-full">
+</div>
+
+<!-- INPUT KOMENTAR -->
+<div class="border-t px-4 py-3">
+<input type="text" placeholder="Tambahkan komentar...." class="w-full text-sm outline-none bg-transparent" onkeydown="return true">
+</div>
+</div> 
+</div>
+</div>
+</div>
+
+ <!-- post2  -->
+<div id="post2"
+class="hidden fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center">
+<button
+onclick="closePostPopup()"
+class="absolute top-4 right-4 z-[60]
+text-white text-3xl font-bold hover:opacity-70">
+✕
+</button>
+
+<div class="bg-white w-[90%] max-w-5xl h-[90vh] flex"
+onclick="event.stopPropagation()">
+<!-- WRAPPER UTAMA -->
+<div class="bg-white w-[90%] max-w-5xl h-[90vh] flex" onclick="event.stopPropagation()">
+
+<!-- FOTO -->
+<div class="w-1/2 bg-black flex items-center justify-center">
+<img src="Aset/gambar/remot.png" class="max-w-full max-h-full object-contain">
+</div>
+
+<!--  INFO dan KOMENTAR -->
+<div class="w-1/2 flex flex-col text-sm">
+
+<!-- HEADER AKUN -->
+<div class="flex items-center gap-3 px-4 py-3 border-b">
+<img src="Aset/gambar/pp-default.png" class="w-9 h-9 rounded-full">
+<span class="font-semibold">System.Care.Sync</span>
+</div>
+
+<!-- CAPTION -->
+<div class="flex gap-3 px-4 py-3 border-b">
+<img src="Aset/gambar/pp-default.png" class="w-8 h-8 rounded-full">
+<div>
+<span class="font-semibold">System.Care.Sync</span>
+<div class="text-gray-700 space-y-1">
+<p>🛠️ Kami bantu perbaiki komputer secara remote!</p>
+<p>Layanan mencakup:</p>
+<ul class="list-disc list-inside">
+<li>Install Windows 7, 8, 10</li>
+<li>Scan & hapus virus, spyware, malware</li>
+<li>Optimasi kecepatan PC</li>
+<li>Install driver sesuai OS</li>
+<li>Diagnosa software & hardware</li>
+<li>Perbaikan error game & software</li>
+<li>Recovery data</li>
+<li>Bantu reset password login Windows</li>
+<li>Upgrade hardware untuk performa maksimal</li>
+</ul>
+<p>📞 Chat Sekarang: +62 8389-3234-301<p>
+  💬 Konsultasi gratis
+</p>
+</p>
+</div>
+</div>
+</div>
+
+<!-- LIST KOMENTAR -->
+<div class="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+<div class="flex gap-3">
+<img src="https://cdn-icons-png.flaticon.com/512/4042/4042422.png" class="w-8 h-7 rounded-full">
+<p><span class="font-semibold">DewiKartika.Ayu</span> mantap, bisa bantu remote install Office terbaru juga gak?,lagi butuh soalnya</p>
+</div>
+</div>
+
+
+<!-- ICON ACTION -->
+<div class="px-4 py-2 border-t flex gap-4 text-xl">
+<span>❤️</span>
+<span>💬</span>
+<img src="https://www.oppl.org/wp-content/uploads/2023/07/Share-icon-Upward-arrow.png"class="w-7 h-7 rounded-full">
+</div>
+
+<!-- INPUT KOMENTAR -->
+<div class="border-t px-4 py-3">
+<input type="text" placeholder="Tambahkan komentar...." class="w-full text-sm outline-none bg-transparent" onkeydown="return true">
+</div>
+</div> 
+</div>
+</div>
+</div>
+
+
+<!-- post3  -->
+
+<div id="post3"
+class="hidden fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center">
+<button
+onclick="closePostPopup()"
+class="absolute top-4 right-4 z-[60]
+text-white text-3xl font-bold hover:opacity-70">
+✕
+</button>
+
+<div class="bg-white w-[90%] max-w-5xl h-[90vh] flex"
+onclick="event.stopPropagation()">
+<!-- WRAPPER UTAMA -->
+<div class="bg-white w-[90%] max-w-5xl h-[90vh] flex" onclick="event.stopPropagation()">
+
+<!-- FOTO -->
+<div class="w-1/2 bg-black flex items-center justify-center">
+<img src="Aset/gambar/jam.png" class="max-w-full max-h-full object-contain">
+</div>
+
+<!-- INFO dan KOMENTAR -->
+<div class="w-1/2 flex flex-col text-sm">
+
+<!-- HEADER AKUN -->
+<div class="flex items-center gap-3 px-4 py-3 border-b">
+<img src="Aset/gambar/pp-default.png" class="w-9 h-9 rounded-full">
+<span class="font-semibold">System.Care.Sync</span>
+</div>
+
+<!-- CAPTION -->
+<div class="flex gap-3 px-4 py-3 border-b">
+<img src="Aset/gambar/pp-default.png" class="w-8 h-8 rounded-full">
+<div>
+<span class="font-semibold">System.Care.Sync</span>
+<div class="text-gray-700 space-y-1">
+<p>🔧 Perbaikan Hardware & Software | Cepat & Profesional</p>
+<p>Jam Operasional:</p>
+<ul class="list-disc list-inside">
+<li>Senin – Jumat: 08.30 – 20.00</li>
+<li>Sabtu: 08.30 – 15.00</li>
+<li>Minggu: 11.00 – 16.00</li>
+</ul>
+<p>Layanan software remot dan datang langsung tersedia</p>
+<p>📞 +62 838-9323-4301</p>
+<a href="https://systemcaresync.netlify.app/" class="text-[#00376b] font-semibold flex items-center gap-2 mb-2">
+🌐systemcaresync
+</a>
+<p>DM untuk konsultasi atau penanganan servis</p>
+</div>
+</div>
+</div>
+
+<!-- LIST KOMENTAR -->
+<div class="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+<div class="flex gap-3">
+</div>
+</div>
+
+<!-- ICON ACTION -->
+<div class="px-4 py-2 border-t flex gap-4 text-xl">
+<span>❤️</span>
+<span>💬</span>
+<img src="https://www.oppl.org/wp-content/uploads/2023/07/Share-icon-Upward-arrow.png"class="w-7 h-7 rounded-full">
+</div>
+
+<!-- INPUT KOMENTAR -->
+<div class="border-t px-4 py-3">
+<input type="text" placeholder="Tambahkan komentar...." class="w-full text-sm outline-none bg-transparent" onkeydown="return true">
+</div>
+</div> 
+</div>
+</div>
+</div>
+
+<!-- post4  -->
+
+<div id="post4"
+class="hidden fixed inset-0 bg-black/60 z-[9999] flex items-center justify-center">
+<button
+onclick="closePostPopup()"
+class="absolute top-4 right-4 z-[60]
+text-white text-3xl font-bold hover:opacity-70">
+✕
+</button>
+
+<div class="bg-white w-[90%] max-w-5xl h-[90vh] flex"
+onclick="event.stopPropagation()">
+<!-- WRAPPER UTAMA -->
+<div class="bg-white w-[90%] max-w-5xl h-[90vh] flex" onclick="event.stopPropagation()">
+
+<!-- KIRI FOTO -->
+<div class="w-1/2 bg-black flex items-center justify-center">
+<img src="Aset/gambar/pc.png" class="max-w-full max-h-full object-contain">
+</div>
+
+<!-- KANAN INFO & KOMENTAR -->
+<div class="w-1/2 flex flex-col text-sm">
+
+<!-- HEADER AKUN -->
+<div class="flex items-center gap-3 px-4 py-3 border-b">
+<img src="Aset/gambar/pp-default.png" class="w-9 h-9 rounded-full">
+<span class="font-semibold">System.Care.Sync</span>
+</div>
+
+<!-- CAPTION -->
+<div class="flex gap-3 px-4 py-3 border-b">
+<img src="Aset/gambar/pp-default.png" class="w-8 h-8 rounded-full">
+<div>
+<span class="font-semibold">System.Care.Sync</span>
+<div class="text-gray-700 space-y-1">
+
+<!-- RINGKASAN ARTIKEL -->
+<p>📈 Hallo PC Builders!</p>
+<p>Awal 2026 dibuka dengan kabar kurang menyenangkan😩. Harga part komputer bukannya turun, malah berpotensi naik tajam.</p>
+<p>Laporan DRAMeXchange menyebut harga kontrak DRAM berpotensi naik hingga 50% karena permintaan OEM tinggi dan posisi manufaktur melemah.Manufaktur berebut 
+kontrak jangka panjang dengan penyuplai seperti SK hynix dan Samsung, sementara stok OEM disebut hanya cukup beberapa minggu.</p>
+<p>Industri AI ikut menyerap pasokan DRAM, membuat pasar PC rumahan makin sulit mendapatkan stock dengan harga wajar,tidak hanya itu prangkat keras seperti
+vga card kena imbas pada vramnya.</p>
+<p><strong>Gimana pendapat kalian?</strong></p>
+
+<!-- PROMOSI -->
+<div class="mt-2 border-t pt-2">
+<p>📣 System Care Sync siap bantu di tengah harga komponen yang naik:😄💪</p>
+<ul class="list-disc list-inside">
+<li>Diagnosa hardware & software</li>
+<li>Optimasi performa tanpa ganti part</li>
+<li>Konsultasi upgrade hemat harga sesuai</li>
+</ul>
+<p>📞 +62 838-9323-4301</p>
+<p>🌐 systemcaresync.netlify.app</p>
+</div>
+
+<!-- HASHTAG OPSIONAL -->
+<p class="text-gray-500 text-xs">#pcbuild #komponenpc #hardware #systemcaresync</p>
+
+</div>
+</div>
+</div>
+
+
+
+<!-- LIST KOMENTAR -->
+<div class="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+
+<div class="flex gap-3">
+<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS3T3RRIG6af02swO60-EKwHu7q_G9NCZ9N1T7NZTbiv8_7CCwL" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">galih_setiawan</span> harga RAM bikin kantong jebol 😩</p>
+</div>
+
+<div class="flex gap-3">
+<img src="https://cdn-icons-png.flaticon.com/256/560/560200.png" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">nurul_aini</span> baru mau upgrade PC, eh malah naik drastis 📈</p>
+</div>
+
+<div class="flex gap-3">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUpZfreVEz5czQFFFr3vdEs_7JvpLnvvl-kgExlm3VllDuJH2VX8-vyVUpRx0W6iJbCu0&usqp=CAU" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">david_kurnia</span> ada juga oknum seller yang nimbun stok RAM, bikin harga makin susah turun.</p>
+</div>
+
+<div class="flex gap-3">
+<img src="https://esteticapapaya.it/wp-content/uploads/2020/10/avatar-testimonianze-papaya.jpg" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">melisa_putri</span> industri AI bikin rebutan DRAM, kita user biasa jadi susah 💻</p>
+</div>
+
+<div class="flex gap-3">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzhmPhdOJe1PIxGBiRwVrtyZQErhy-SYAtEDyRYeemdfV4vxjY" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">eko_saputra</span> kayaknya harus nunda upgrade, nunggu harga stabil dulu 👌</p>
+</div>
+
+<div class="flex gap-3">
+<img src="https://www.shareicon.net/data/2016/09/15/829457_user_512x512.png;width=256;height=256" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">linda_maharani</span> semoga ada promo biar bisa rakit PC baru 🙏</p>
+</div>
+
+<div class="flex gap-3">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtMB_59ZzqqtmKpvV9wNT9CRFp7jn79H-iMlDyQd8ERE821wQpYKxlURObuRECcn5RWdc&usqp=CAU" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">arif_hidayat</span> DRAMeXchange sampai bilang naik 50%, parah banget 🔥</p>
+</div>
+
+<div class="flex gap-3">
+<img src="https://cdn-icons-png.flaticon.com/512/15735/15735394.png" class="w-7 h-7 rounded-full">
+<p><span class="font-semibold">sarah_amelia</span> pusing, kuliah butuh laptop tapi harga RAM bikin nyesek 😔</p>
+</div>
+
+</div>
+
+
+<!-- ICON ACTION -->
+<div class="px-4 py-2 border-t flex gap-4 text-xl">
+<span>❤️</span>
+<span>💬</span>
+</div>
+
+<!-- INPUT KOMENTAR -->
+<div class="border-t px-4 py-3">
+<input type="text" placeholder="Tambahkan komentar..." class="w-full text-sm outline-none bg-transparent" onkeydown="return true">
+</div>
+</div> 
+</div>
+</div>
+</div>
+
+
+<!-- MODAL LOGIN / DAFTAR -->
+<div id="auth-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+<div class="bg-white rounded-lg w-full max-w-sm overflow-hidden modal-animate">
+<div class="relative p-6 flex flex-col items-center border-b">
+<button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black transition">✕</button>
+<img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" class="h-12 w-12 mb-2">
+<span class="text-xl font-semibold font-sans">Instagram</span>
+</div>
+<div class="p-6">
+<h3 id="modal-title" class="text-center text-gray-600 mb-6 font-semibold">Masuk ke akun Anda</h3>
+<div id="msg-success" class="hidden mb-4 p-3 bg-green-100 text-green-700 text-sm rounded text-center font-medium"></div>
+<div id="msg-error" class="hidden mb-4 p-3 bg-red-100 text-red-700 text-sm rounded text-center font-medium"></div>
+<form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
+<input type="text" id="input-username" placeholder="Username" class="w-full px-4 py-2 border rounded bg-gray-50 text-sm" required>
+<input type="password" id="input-password" placeholder="Password" class="w-full px-4 py-2 border rounded bg-gray-50 text-sm" required>
+<button type="submit" id="btn-submit" class="w-full bg-[#0095f6] text-white py-1.5 rounded font-semibold text-sm hover:bg-[#1877f2]">Masuk</button>
+</form>
+<div class="mt-6 text-center text-sm">
+<p id="toggle-text" class="text-gray-600">Belum punya akun? <button onclick="toggleAuthMode()" class="text-[#0095f6] font-semibold">Buat akun</button></p>
+</div>
+</div>
+<div class="px-6 pb-5 text-center border-t">
+<div class="flex items-center justify-center gap-2 mt-4 opacity-70">
+<img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" alt="Meta" class="h-6 w-auto">
+<span class="text-xs text-gray-500">Meta Platform Support</span>
+</div>
+<div class="text-[10px] text-gray-400 mt-1">© 2026 Meta. All rights reserved.</div>
+</div>
+</div>
+</div>
+
+<!-- MODAL PRIVAT (STORY) -->
+<div id="private-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onclick="closePrivateModal()">
+<div class="bg-white rounded-xl p-8 max-w-xs w-full text-center modal-animate" onclick="event.stopPropagation()">
+<div class="w-16 h-16 rounded-full border-2 border-black mx-auto mb-4 flex items-center justify-center"><i data-lucide="lock" class="w-8 h-8"></i></div>
+<h3 class="font-bold text-lg mb-2">Akun Privat</h3>
+<p class="text-gray-500 text-sm mb-6">Postingan ini privat, hanya orang tertentu yang diizinkan oleh pengguna.</p>
+<button onclick="closePrivateModal()" class="w-full bg-[#0095f6] text-white py-2 rounded-lg font-semibold text-sm">Oke</button>
+</div>
+</div>
+
+<!-- MODAL KONFIRMASI HAPUS -->
+<div id="delete-modal" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+<div class="bg-white rounded-xl p-6 max-w-xs w-full text-center modal-animate">
+<div class="w-12 h-12 rounded-full bg-red-100 text-red-600 mx-auto mb-4 flex items-center justify-center"><i data-lucide="trash-2"></i></div>
+<h3 class="font-bold text-lg mb-2">Hapus Akun?</h3>
+<p class="text-gray-500 text-sm mb-6">Data akun akan dihapus permanen. Anda yakin?</p>
+<div class="flex gap-3">
+<button onclick="closeDeleteModal()" class="flex-1 px-4 py-2 border rounded-lg text-sm font-semibold hover:bg-gray-50">Batal</button>
+<button onclick="executeDelete()" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold hover:bg-red-700">Ya, Hapus</button>
+</div>
+</div>
+</div>
+
+</main> 
+<!-- Footer -->
+<footer class="bg-white border-top py-3 mt-5">
+<div class="container-fluid px-5">
+<div class="d-flex flex-wrap justify-content-center gap-3 mb-2">
+<a href="#" class="footer-link">Meta</a>
+<a href="#" class="footer-link">Tentang</a>
+<a href="#" class="footer-link">Blog</a>
+<a href="#" class="footer-link">Pekerjaan</a>
+<a href="#" class="footer-link">Bantuan</a>
+<a href="#" class="footer-link">API</a>
+<a href="#" class="footer-link">Privasi</a>
+<a href="#" class="footer-link">Ketentuan</a>
+<a href="#" class="footer-link">Lokasi</a>
+<a href="#" class="footer-link">Instagram Lite</a>
+<a href="#" class="footer-link">Meta AI</a>
+<a href="#" class="footer-link">Threads</a>
+<a href="#" class="footer-link">Nama: Jeremiel Arfiawan KS</a>
+<a href="#" class="footer-link">NIM: 1124090032 & Prodi: Sistem Komputer</a>
+<a href="#" class="footer-link">Verifikasi Meta</a>
+<a href="#" class="footer-link">Meta di Indonesia</a>
+</div>
+<div class="text-center small text-muted">Bahasa Indonesia © 2026 Instagram from Meta</div>
+</div>
+</footer>
+
+
+
+
+<!--======SCRIPTS======-->
+<script>
+// Ikon Lucide
+lucide.createIcons();
+
+// State Aplikasi
+let currentUser = null;
+let authMode = 'login'; // 'login' atau 'signup'
+
+// CEK LOGIN SAAT LOAD
+function init() {
+const savedUser = localStorage.getItem('instagram_clone_user');
+if (savedUser) {
+currentUser = JSON.parse(savedUser);
+}
+updateUI();
+}
+
+// Tampilan Berdasarkan Status Login
+function updateUI() {
+const authButtons = document.getElementById('auth-buttons');
+const userProfile = document.getElementById('user-profile');
+const avatarLetter = document.getElementById('user-avatar-letter');
+const menuUsername = document.getElementById('menu-username');
+if (currentUser) {
+authButtons.classList.add('hidden');
+userProfile.classList.remove('hidden');
+avatarLetter.textContent = currentUser.username.charAt(0);
+menuUsername.textContent = currentUser.username;
+} else {
+authButtons.classList.remove('hidden');
+userProfile.classList.add('hidden');
+}
+            
+// Tutup menu jika terbuka
+document.getElementById('profile-menu').classList.add('hidden');
+}
+
+// FUNGSI BUKA/TUTUP MODAL AUTH
+function openModal(mode) {
+authMode = mode;
+document.getElementById('auth-modal').classList.remove('hidden');
+document.getElementById('msg-error').classList.add('hidden');
+document.getElementById('msg-success').classList.add('hidden');
+document.getElementById('input-username').value = '';
+document.getElementById('input-password').value = '';
+            
+updateModalText();
+}
+
+function closeModal() {
+document.getElementById('auth-modal').classList.add('hidden');
+}
+function updateModalText() {
+const title = document.getElementById('modal-title');
+const btn = document.getElementById('btn-submit');
+const toggleText = document.getElementById('toggle-text');
+
+if (authMode === 'login') {
+title.textContent = 'Masuk ke akun Anda';
+btn.textContent = 'Masuk';
+toggleText.innerHTML = 'Belum punya akun? <button onclick="toggleAuthMode()" class="text-[#0095f6] font-semibold">Buat akun</button>';
+} else {
+title.textContent = 'Buat akun baru';
+btn.textContent = 'Daftar';
+toggleText.innerHTML = 'Sudah punya akun? <button onclick="toggleAuthMode()" class="text-[#0095f6] font-semibold">Masuk</button>';
+}
+}
+function toggleAuthMode() {
+authMode = authMode === 'login' ? 'signup' : 'login';
+document.getElementById('msg-error').classList.add('hidden');
+document.getElementById('msg-success').classList.add('hidden');
+updateModalText();
+}
+
+// LOGIN / DAFTAR
+function handleAuth(e) {
+e.preventDefault();
+const username = document.getElementById('input-username').value;
+const password = document.getElementById('input-password').value;
+const errorMsg = document.getElementById('msg-error');
+const successMsg = document.getElementById('msg-success');
+            
+// Ambil database
+const usersDb = JSON.parse(localStorage.getItem('users_db') || '{}');
+
+if (authMode === 'signup') {
+
+// LOGIKA DAFTAR
+if (usersDb[username]) {
+showError('Username sudah digunakan!');
+ return;
+}
+if (password.length < 6) {
+showError('Password minimal 6 karakter');
+return;
+}
+                
+// Simpan user
+usersDb[username] = { password: password };
+localStorage.setItem('users_db', JSON.stringify(usersDb));
+// Tampilkan sukses
+errorMsg.classList.add('hidden');
+successMsg.textContent = 'Sudah terdaftar, silakan login';
+successMsg.classList.remove('hidden');
+// Pindah ke mode login 
+setTimeout(() => {
+authMode = 'login';
+updateModalText();
+document.getElementById('input-password').value = '';
+successMsg.classList.add('hidden');
+}, 1500);
+} else {
+// LOGIN
+const user = usersDb[username];
+if (!user) {
+showError('Username tidak terdaftar');
+return;
+}
+if (user.password !== password) {
+showError('Password salah');
+return;
+}
+// Login Berhasil
+currentUser = { username: username };
+localStorage.setItem('instagram_clone_user', JSON.stringify(currentUser));
+updateUI();
+closeModal();
+}
+}
+
+function showError(msg) {
+const el = document.getElementById('msg-error');
+el.textContent = msg;
+el.classList.remove('hidden');
+}
+
+// LOGOUT dan HAPUS
+function toggleMenu() {
+document.getElementById('profile-menu').classList.toggle('hidden');
+}
+
+function logout() {
+currentUser = null;
+localStorage.removeItem('instagram_clone_user');
+updateUI();
+}
+
+function confirmDelete() {
+document.getElementById('delete-modal').classList.remove('hidden');
+document.getElementById('profile-menu').classList.add('hidden');
+}
+
+function closeDeleteModal() {
+document.getElementById('delete-modal').classList.add('hidden');
+}
+
+function executeDelete() {
+if (currentUser) {
+const usersDb = JSON.parse(localStorage.getItem('users_db') || '{}');
+delete usersDb[currentUser.username];
+localStorage.setItem('users_db', JSON.stringify(usersDb));
+logout();
+closeDeleteModal();
+}
+}
+
+function showPrivateModal() {
+document.getElementById('private-modal').classList.remove('hidden');
+}
+
+function closePrivateModal() {
+document.getElementById('private-modal').classList.add('hidden');
+}
+
+// FOLLOW
+let isFollowing = false;
+let followerCount = 799;
+
+function handleFollowClick() {
+if (!currentUser) {
+openModal('login');
+return;
+}
+toggleFollow();
+}
+
+function toggleFollow() {
+if (!isFollowing) {
+isFollowing = true;
+followerCount++;
+updateFollowUI();
+} else {
+document.getElementById('unfollow-modal').classList.remove('hidden');
+}
+}
+
+function confirmUnfollow() {
+isFollowing = false;
+followerCount--;
+updateFollowUI();
+closeUnfollowModal();
+}
+
+function closeUnfollowModal() {
+document.getElementById('unfollow-modal').classList.add('hidden');
+}
+
+function updateFollowUI() {
+const btn = document.getElementById('followBtn');
+const countEl = document.getElementById('followerCount');
+countEl.textContent = followerCount;
+if (isFollowing) {
+btn.textContent = 'Mengikuti';
+btn.classList.remove('bg-[#0095f6]', 'hover:bg-[#1877f2]', 'text-white');
+btn.classList.add('bg-gray-200', 'text-black');
+} else {
+btn.textContent = 'Ikuti';
+btn.classList.remove('bg-gray-200', 'text-black');
+btn.classList.add('bg-[#0095f6]', 'hover:bg-[#1877f2]', 'text-white');
+}
+}
+
+// STORY 1 PRIVATE 
+function handlePrivateStoryClick() {
+if (!currentUser) {
+openModal('login');
+return;
+}
+showPrivateModal();
+}
+
+// STORY PUBLIC (2 & 3)
+function handlePublicStoryClick(id) {
+if (!currentUser) {
+openModal('login');
+return;
+}
+if (isFollowing !== true) {
+openStoryLock();
+return;
+}
+openStory(id);
+}
+
+function openStoryLock() {
+const modal = document.getElementById('story-lock-modal');
+if (modal) modal.classList.remove('hidden');
+}
+
+function closeStoryLock() {
+document.getElementById('story-lock-modal')?.classList.add('hidden');
+}
+
+function openStory(id) {
+document.getElementById('story-lock-modal')?.classList.add('hidden');
+document.getElementById('auth-modal')?.classList.add('hidden');
+const viewer = document.getElementById('story-viewer');
+const img = document.getElementById('storyImage');
+img.src = `aset/gambar/story${id}.png`;
+viewer.classList.remove('hidden');
+}
+
+function closeStoryViewer() {
+document.getElementById('story-viewer')?.classList.add('hidden');
+}
+
+// Tombol Grid,Reels,Tagged
+function activateTab(tab) {
+if (!currentUser && tab !== 'photo') {
+document.getElementById('login-notif').classList.remove('hidden');
+return;
+}
+document.getElementById('photo-grid').classList.toggle(tab === 'photo');
+document.getElementById('reels-grid').classList.toggle(tab === 'reels');
+document.getElementById('tag-grid').classList.toggle(tab === 'tag');
+
+// Reset semua tab
+['photo', 'reels', 'tag'].forEach(id => {
+document.getElementById(`tab-${id}`).classList.remove('border-black', 'text-black');
+document.getElementById(`tab-${id}`).classList.add('border-transparent', 'text-gray-500');
+});
+
+// Aktifkan tab sekarang
+document.getElementById(`tab-${tab}`).classList.add('border-black', 'text-black');
+document.getElementById(`tab-${tab}`).classList.remove('border-transparent', 'text-gray-500');
+}
+
+// Login oke
+function closeLoginNotif() {
+document.getElementById('login-notif').classList.add('hidden');
+}
+
+function activateTab(tab) {
+if (!currentUser && tab !== 'photo') {
+document.getElementById('login-notif').classList.remove('hidden');
+return;
+}
+
+// Sembunyikan semua grid dulu
+document.getElementById('photo-grid').classList.add('hidden');
+document.getElementById('reels-grid').classList.add('hidden');
+document.getElementById('tag-grid').classList.add('hidden');
+
+// Tampilkan grid sesuai tab
+if (tab === 'photo') document.getElementById('photo-grid').classList.remove('hidden');
+if (tab === 'reels') document.getElementById('reels-grid').classList.remove('hidden');
+if (tab === 'tag') document.getElementById('tag-grid').classList.remove('hidden');
+
+// Reset semua tab style
+['photo', 'reels', 'tag'].forEach(id => {
+document.getElementById(`tab-${id}`).classList.remove('border-black', 'text-black');
+document.getElementById(`tab-${id}`).classList.add('border-transparent', 'text-gray-500');
+});
+
+// Aktifkan tab sekarang
+document.getElementById(`tab-${tab}`).classList.add('border-black', 'text-black');
+document.getElementById(`tab-${tab}`).classList.remove('border-transparent', 'text-gray-500');
+}
+
+function handlePostClick(id){
+// Reset semua popup post foto
+document.querySelectorAll('[id^="post"]').forEach(p=>{
+p.classList.add("hidden");
+});
+
+// Wajib Login
+if(!currentUser){
+const notif = document.getElementById("login-notif");
+if(notif){
+notif.classList.remove("hidden");
+}
+return; 
+}
+
+// Sudah Login 
+const popup = document.getElementById("post"+id);
+if(popup){
+popup.classList.remove("hidden");
+}
+}
+
+function closePostPopup(){
+// Tombol x
+document.querySelectorAll('[id^="post"]').forEach(p=>{
+p.classList.add("hidden");
+});
+}
+
+// Jalankan saat di awal
+init();
+
+
+</script>
+ 
+<script>
+// SPLASH
+document.documentElement.classList.add('splash-lock');
+document.body.classList.add('splash-lock');
+// DURASI SPLASH
+var splashDuration = 3010; 
+// SETELAH DURASI
+window.addEventListener('load', function() {
+setTimeout(function() {
+var splash = document.getElementById('splash');
+if (splash) {
+splash.style.opacity = '0';
+splash.style.transition = 'opacity 250ms ease';
+setTimeout(function() {
+splash.remove();
+document.documentElement.classList.remove('splash-lock');
+document.body.classList.remove('splash-lock');
+}, 260);
+}
+}, splashDuration);
+});
+</script>
+
+</body>
+</html>
